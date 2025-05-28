@@ -30,3 +30,7 @@ add_library(${PROJECT_NAME} SHARED ${MYSYSLOG_SRC})
 target_compile_definitions(${PROJECT_NAME} PRIVATE USE_BACKEND_MYSYSLOG)
 target_include_directories(${PROJECT_NAME} PUBLIC ${DIR_INCLUDE})
 
+foreach(driver ${DRIVERS_SRC})
+    get_filename_component(lib_name ${driver} NAME_WE)
+    target_link_libraries(${PROJECT_NAME} ${lib_name})
+endforeach()
