@@ -58,7 +58,7 @@ int mysyslog(const char *msg, int level, int driver, int format, const char *pat
 
     // Loading SO function
     mysyslog_function = dlsym(so_handle, "mysyslog_back");
-    if (mysyslog == NULL) {
+    if (mysyslog_function == NULL) {
         free(full_path);
         fprintf(stderr, "Error loading backend:\t%s\n", dlerror());
         dlclose(so_handle);
