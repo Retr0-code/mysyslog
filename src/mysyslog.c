@@ -52,7 +52,7 @@ int mysyslog(const char *msg, int level, int driver, int format, const char *pat
     void *so_handle = dlopen(module_name, RTLD_LAZY | RTLD_LOCAL);
     if (so_handle == NULL) {
         free(full_path);
-        fputs(dlerror(), stderr);
+        fprintf(stderr, "Error while opening module %s:\t%s\n", module_name, strerror(dlerror()));
         return slerror_no_mod;
     }
 
@@ -60,7 +60,7 @@ int mysyslog(const char *msg, int level, int driver, int format, const char *pat
     mysyslog_function = dlsym(so_handle, "mysyslog_back");
     if (mysyslog == NULL) {
         free(full_path);
-        fputs(dlerror(), stderr);
+        fprintf(stderr, "Error loading backend:\t%s\n", strerror(dlerror()));
         dlclose(so_handle);
         return slerror_no_mod;
     }
@@ -69,7 +69,7 @@ int mysyslog(const char *msg, int level, int driver, int format, const char *pat
     int error = mysyslog_function(msg, lvl_str, proc_full_name, full_path);
     if (error != slerror_success) {
         free(full_path);
-        fputs(strerror(errno), stderr);
+        perror("Error logging message");
         dlclose(so_handle);
         return error;
     }
